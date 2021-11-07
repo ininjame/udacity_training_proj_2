@@ -25,6 +25,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import r2_score
 from sklearn.pipeline import Pipeline, FeatureUnion
+import joblib
 
 #Function for tokenizing text
 def tokenize(text):
@@ -90,23 +91,15 @@ def main():
                 ("clf", MultiOutputClassifier(estimator=RandomForestClassifier(), n_jobs=2))
                 ])
 
-    pipe2 = Pipeline([
-                ("vect", CountVectorizer(tokenizer = tokenize)),
-                ("tfidf", TfidfTransformer()),
-                ("clf", MultiOutputClassifier(estimator=RandomForestClassifier(), n_jobs=3))
-                ])
 
     X = df["message"]
     y = df.iloc[:,4:]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
     pipeline.fit(X_train, y_train)
-    print(pipeline.score(X_test, y_test))
 
-    # pipe2.fit(X_train, y_train)
-    # print(pipe2.score(X_train, y_train))
-    # print(X.head())
-    # print(X.shape)
+    joblib.dump(pipeline, "models/pipeline_jlib")
+    return pipeline
 
 if __name__=="__main__":
     main()
