@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 import plotly.graph_objs as go
 import pandas as pd
-from models.train_classifier import tokenize
+from models.train_classifier import TrainClassifier
 
 def return_figures():
     """
@@ -32,10 +32,11 @@ def return_figures():
                     yaxis = dict(title="Message count"))
     
     #Graph for top 10 popular words
+    new_trainer = TrainClassifier()
     graph_two = []
     word_counts = []
     for item in df.message.values:
-        word_counts.extend(tokenize(item))
+        word_counts.extend(new_trainer.tokenize(item))
 
     word_list = pd.Series(word_counts)
     word_list.value_counts()
