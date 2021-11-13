@@ -25,28 +25,31 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import r2_score
 from sklearn.pipeline import Pipeline, FeatureUnion
-import joblib
+import pickle
 
-# #Function for tokenizing text
-# def tokenize(text):
-#     tokens = word_tokenize(text)
-#     lemmatizer = WordNetLemmatizer()
+#Function for tokenizing text
+def tokenize(text):
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
 
-#     clean_tokens = []
-#     for tok in tokens:
-#         cleaned = lemmatizer.lemmatize(tok.strip().lower())
-#         clean_tokens.append(cleaned)
+    clean_tokens = []
+    for tok in tokens:
+        cleaned = lemmatizer.lemmatize(tok.strip().lower())
+        clean_tokens.append(cleaned)
     
-#     clean_tokens = [w for w in clean_tokens if w not in stopwords.words("english")]
+    clean_tokens = [w for w in clean_tokens if w not in stopwords.words("english")]
     
-#     return clean_tokens
+    return clean_tokens
     
 #Custom estimator class to identify if 1st word of response is a verb
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
+    def __init__(self, tokenize_func=None):
+        self.tokenize_func = tokenize_func
+
     def starting_verb(self, text):
         try:
-            pos_tags = nltk.pos_tag(tokenize(text))
+            pos_tags = nltk.pos_tag(self.tokenize_func(text))
             first_word, first_tag = pos_tags[0]
             if first_tag in ['VB', 'VBP'] or first_word == 'RT':
                 return True
@@ -89,7 +92,7 @@ class NewMultiOutput(BaseEstimator, ClassifierMixin):
                 self.estimator.kwargs[param] = val
         return self
 
-class TrainClassifier:
+class TrainClassifier(object):
 
     def __init__(self):
         self.df = None
@@ -131,7 +134,7 @@ class TrainClassifier:
                                 ("tfidf", TfidfTransformer())
                             ])
                         ),
-                        ("verb_extract", StartingVerbExtractor())
+                        ("verb_extract", StartingVerbExtractor(self.tokenize))
                     ])
                 ),
                 ("clf", NewMultiOutput(estimator=MultiOutputClassifier(estimator=RandomForestClassifier(), n_jobs=2)))
@@ -149,13 +152,18 @@ class TrainClassifier:
         return self.pipeline
 
     def save_model(self,filename):
-        joblib.dump(self, filename)
+        with open(filename,"wb") as file:
+            pickle.dump(self, file)
         
     
-    def load_model(filename):
-        return joblib.load(filename)
+    def load_model(self, filename):
+        with open(filename, "rb") as file:
+            model = pickle.load(file)
+        self.pipeline = model.pipeline
+        
+        
     
-    load_model = staticmethod(load_model)
+    # load_model = staticmethod(load_model)
 
 # def main():
 
@@ -203,3 +211,9 @@ class TrainClassifier:
 #     return pipeline
 
     
+if __name__ == "__main__":
+    new_trainer = TrainClassifier()
+    new_trainer.load_data()
+    new_trainer.create_pipe()
+    new_trainer.__module__ = "train_classifier"
+    new_trainer.save_model("models/model.pkl")

@@ -5,16 +5,26 @@ from sqlalchemy import create_engine
 from models.gen_fig_data import return_figures
 import plotly
 import json
-from sklearn.externals import joblib
+import joblib
+import pickle
 import pandas as pd
 import models.train_classifier as train_classifier
-from models.train_classifier import TrainClassifier
+from models.train_classifier import TrainClassifier, StartingVerbExtractor, NewMultiOutput
 import sys
+import os
 
 sys.modules["train_classifier"] = train_classifier
 
-# new_trainer = TrainClassifier()
-model = joblib.load("models/model.pkl")
+if "model.pickle" not in os.listdir("./models"):
+    new_trainer = TrainClassifier()
+    new_trainer.load_data()
+    new_trainer.create_pipe()
+    new_trainer.save_model("models/model.pkl")
+
+model = joblib.load("models/model.pickle")
+# with open("models/model.pickle", "rb") as file:
+#     from models.train_classifier import TrainClassifier, StartingVerbExtractor, NewMultiOutput
+#     model = pickle.load(file)
 db_name = "data/DisasterResponse.db"
 db_url = "".join(["sqlite+pysqlite:///", db_name])
 engine = create_engine(db_url)
@@ -42,7 +52,7 @@ def dashboard():
 
     # use model to predict classification for query
     classification_labels = model.pipeline.predict([query])[0]
-    classification_results = dict(zip(df.columns[4:], classification_labels))
+    classification_result = dict(zip(df.columns[4:], classification_labels))
     return render_template("dashboard.html",
                             query = query,
-                            classification_results = classification_results)
+                            classification_result = classification_result)
