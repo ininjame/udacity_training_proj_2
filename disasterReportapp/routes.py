@@ -2,7 +2,7 @@ import json
 from disasterReportapp import app
 from flask import render_template, request
 from sqlalchemy import create_engine
-from models.gen_fig_data import return_figures
+from models.gen_fig_data import create_base, return_figures
 import plotly
 import json
 import joblib
@@ -15,11 +15,14 @@ import os
 
 sys.modules["train_classifier"] = train_classifier
 
+if "graph_1_x.npy" not in os.listdir("./models"):
+    create_base()
+
 if "model.pickle" not in os.listdir("./models"):
     new_trainer = TrainClassifier()
     new_trainer.load_data()
     new_trainer.create_pipe()
-    new_trainer.save_model("models/model.pkl")
+    new_trainer.save_model("models/model.pickle")
 
 model = joblib.load("models/model.pickle")
 # with open("models/model.pickle", "rb") as file:
