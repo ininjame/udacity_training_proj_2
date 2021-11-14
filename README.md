@@ -22,6 +22,17 @@ The target for classification is the type of a disaster responses, making the ma
 Several standard tool in the NTL toolkit proves beneficial, such as tokenization, lemmatization, count vectorizer, tf-idf and so on. These will all be used in the pipeline.  
 There are multiple categories, and a message can be labeled as more than 1 category, thus making this a multi-class, multilabel classification problem. For this, scikit-learn's multi-output estimator will be used, with the base being Random Forest Classifier. A small upgrade has been made to the multi-output estimator, however, to reflect an interesting trend in the data, resulting in a custom NewMultiOutput class.
 
+## Installation instruction
+1. Clone the git repo to your local computer
+2. Open your CLI of choice, make sure it is pointing to the folder "udacity_training_proj_2", or whichever folder the cloned git repo is in.
+3. Run the following command in your CLI: 
+```
+python disasterReport.py
+```
+4. Click on the resulting IP address to open the web app in a separate folder.
+5. Type a message you want to classify into the text box, click "Classify message" button once you're ready.
+
+
 ## Result
 Unfortunately, the r2 score for the current model is very low. (<0.1).  
 The general prediction is that the result is greatly affected by the skewness in the data, with certain types having very high count, and lines where no count where defined.  
