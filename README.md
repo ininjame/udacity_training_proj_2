@@ -25,7 +25,7 @@ There are multiple categories, and a message can be labeled as more than 1 categ
 ## Installation instruction
 1. Clone the git repo to your local computer
 2. Open your CLI of choice, make sure it is pointing to the folder "udacity_training_proj_2", or whichever folder the cloned git repo is in.
-3. Run the following command in your CLI: 
+3. Run the following command in your CLI and wait till an IP is generated: 
 ```
 python disasterReport.py
 ```
