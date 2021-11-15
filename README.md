@@ -32,6 +32,44 @@ python disasterReport.py
 4. Click on the resulting IP address to open the web app in a separate folder.
 5. Type a message you want to classify into the text box, click "Classify message" button once you're ready.
 
+## File structure and script explanation
+The structure of the project and important files are as follows:
+```
+|--data
+|   |--DisasterResponse.db
+|   |--categories.csv
+|   |--messages.csv
+|
+|--disasterReportapp
+|   |--templates
+|   |--__init__.py
+|   |--routes.py
+|
+|--models
+|   |--gen_fig_data.py
+|   |--npy files (data for graph)
+|   |--process_data.py
+|   |--train_classifier.py
+|--disasterReport.py
+
+```
+A detailed explanation of the folders and files are as follows:
+
+**data**: contains the training data and db for processed data. 
+- *categories.csv*: the category labels for the messages
+- *messages.csv*: the messages themselves
+- *DisasterResponse.db*: SQL database for the processed training data. Created with SQLAlchemy
+
+**disasterReportapp**: contains the main Flask web app files
+- *templates*: folder for html files. contains the index.html file for the main page, as well as the dashboard.html file for the classification result dynamic content
+- *__init__.py*: initiation file for the app
+- *routes.py*: the main web app file. Contains routes for the webpages, as well as code for retrieving graph data, generating and loading the model, and provide the data as variables for the front-end
+
+**models**: contains the main file of the pipeline and model
+- *gen_fig_data.py*: code for pre-generating the graph data, as well as returning the data in Plotly graph obj format
+- *npy files*: graph data generated
+- *process_data.py*: pipeline for processing data and adding it to database. If database does not exist, will create database
+- *train_classifier.py*: the model itself. Includes custom class for identifying messages starting with verbs, a customer multi-output classifier, as well as a TrainClassifier class for generating and saving the model.
 
 ## Result
 Unfortunately, the r2 score for the current model is very low. (<0.1).  

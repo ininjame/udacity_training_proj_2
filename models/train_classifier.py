@@ -161,59 +161,10 @@ class TrainClassifier(object):
             model = pickle.load(file)
         self.pipeline = model.pipeline
         
-        
-    
-    # load_model = staticmethod(load_model)
-
-# def main():
-
-#     #STEP 1: Load data from DB
-#     if len(sys.argv) >1:
-#         db_name = sys.argv[1]
-#     else:
-#         db_name = "data\DisasterResponse.db"
-#     db_url = "".join(["sqlite+pysqlite:///", db_name])
-#     engine = create_engine(db_url)
-#     with engine.connect() as conn:
-#         df = pd.read_sql("disres", con=conn)
-
-    
-    
-#     #STEP 2: Create Pipeline
-#     pipeline = Pipeline([
-#                 ("features", 
-#                     FeatureUnion([
-#                         ("text_pipeline", 
-#                             Pipeline([
-#                                 ("vect", CountVectorizer(tokenizer = tokenize)),
-#                                 ("tfidf", TfidfTransformer())
-#                             ])
-#                         ),
-#                         ("verb_extract", StartingVerbExtractor())
-#                     ])
-#                 ),
-#                 ("clf", NewMultiOutput(estimator=MultiOutputClassifier(estimator=RandomForestClassifier(), n_jobs=2)))
-#                 # ("clf", MultiOutputClassifier(estimator=RandomForestClassifier(), n_jobs=2))
-#                 ])
-
-
-#     X = df["message"]
-#     y = df.iloc[:,4:]
-
-#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-#     pipeline.fit(X_train, y_train.iloc[:,1:])
-#     # pipeline.fit(X_train, y_train)
-
-#     # y_pred = pipeline.predict(X_test)
-#     # print(r2_score(y_test, y_pred))
-
-#     joblib.dump(pipeline, "models/pipeline_jlib")
-#     return pipeline
 
     
 if __name__ == "__main__":
     new_trainer = TrainClassifier()
     new_trainer.load_data()
     new_trainer.create_pipe()
-    new_trainer.__module__ = "train_classifier"
-    new_trainer.save_model("models/model.pkl")
+    
