@@ -74,7 +74,7 @@ class NewMultiOutput(BaseEstimator, ClassifierMixin):
         return {'multioutput': True}
     
     def fit(self, X_train, y_train):
-        return self.estimator.fit(X_train, y_train)
+        return self.estimator.fit(X_train, y_train.iloc[:,1:])
 
     def predict(self, X_test):
         y_pred_ = self.estimator.predict(X_test)
@@ -146,7 +146,9 @@ class TrainClassifier(object):
         y = self.df.iloc[:,4:]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-        pipeline.fit(X_train, y_train.iloc[:,1:])
+        pipeline.fit(X_train, y_train)
+        
+        print("Score of the model on test data: {}".format(r2_score(y_test, pipeline.predict(X_test)))) 
 
         self.pipeline = pipeline
         return self.pipeline
