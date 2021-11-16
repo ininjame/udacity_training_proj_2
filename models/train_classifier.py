@@ -43,6 +43,22 @@ def tokenize(text):
     
 #Custom estimator class to identify if 1st word of response is a verb
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
+    '''
+    Class wrapper for custom sklearn transformer to return identifier of .
+    Extended from BaseEstimator and TransformerMixin.
+    Accepts the following parameters:
+
+        - tokenize_func: function used to tokenize text
+    
+    Has the following methods:
+
+        - starting_verb: Main method to identify text messages that start with a verb. Returns a Boolean value.
+
+        - fit: Boilerplate method to match standard sklearn's transformer template. Returns the instance itself. Accepts input text as parameter.
+
+        - transform: standard method for sklearn's transformer. Returns identifier DataFrame of shape (1,0), where the column depicts
+        whether each row of the input data starts with a verb (column values are of Boolean type.) Accept arrays/lists as input.
+    '''
 
     def __init__(self, tokenize_func=None):
         self.tokenize_func = tokenize_func
@@ -66,6 +82,27 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
 
 #Custom classifier for Disaster report
 class NewMultiOutput(BaseEstimator, ClassifierMixin):
+    '''
+    Custom multi-output classifier class.
+    Extends from BaseEstimator and ClassifierMixin.
+    Receives the following parameters:
+    
+        - estimator: Sklearn estimator to be used as base
+    
+        - random_state: to set model's random state
+
+    This class has the following methods:
+
+        - fit: method for fitting model. Standard for custom Sklearn classifier. 
+    Return a custom fit of the base estimator
+
+        - predict: method for outputing prediction as DataFrame. Standard for customer Sklearn classifier. 
+    Return predicted target values as dataframe. Customized output to match data trend of high percentage of "related" categories.
+
+        - get_params: method so that classifier works with GridSearchCV. Return list of class parameters. 
+
+        - set_params: method so that classifier works with GridSearchCV. Set class parameters.
+    '''
     def __init__(self, estimator=None, random_state=42):
         self.estimator = estimator
         self.random_state = random_state
@@ -93,16 +130,36 @@ class NewMultiOutput(BaseEstimator, ClassifierMixin):
         return self
 
 class TrainClassifier(object):
+    '''
+    Class object wrapper for generating multi-output classifier pipeline.
+    Reads data and generate + fit a text-processing pipeline for classifying messages.
+    No parameters needed. Has the following methods:
+
+        - load_data: Retrieve data from DB designated by user input in command line (if there is no input, retrieve from default DB).
+        Retrieved data is loaded into a pandas dataframe, and asssigned to class variable  
+    
+        - tokenize: turn text messages into list of tokens. For use in create_pipe method
+    
+        - create_pipe: Main method for creating pipeline. 
+        Use sklearn's CountVectorize with tokenizer, Tf-idf, and custom starting verb transformers for text processing.
+        Outputs are concatenated using FeatureUnion.
+        Pipeline is built using sklearn's Pipeline class.
+        Uses custom multi-oput estimator for estimator
+        Also split train and test data from data loaded via load_data() method, and fit pipeline to training data.
+        Assign pipeline to class variable, and return pipeline
+
+    '''
 
     def __init__(self):
         self.df = None
         self.pipeline = None
     
     def load_data(self):
-        if len(sys.argv) >1:
-            db_name = sys.argv[1]
+        if len(sys.argv) >1: 
+            db_name = sys.argv[1] #Retrieve user input in command line as name of DB
         else:
             db_name = "data\DisasterResponse.db"
+        #Retrieve data from DB with SQL Alchemy
         db_url = "".join(["sqlite+pysqlite:///", db_name])
         engine = create_engine(db_url)
         with engine.connect() as conn:
@@ -152,20 +209,11 @@ class TrainClassifier(object):
 
         self.pipeline = pipeline
         return self.pipeline
-
-    def save_model(self,filename):
-        with open(filename,"wb") as file:
-            pickle.dump(self, file)
-        
-    
-    def load_model(self, filename):
-        with open(filename, "rb") as file:
-            model = pickle.load(file)
-        self.pipeline = model.pipeline
         
 
     
 if __name__ == "__main__":
+    #Create pipeline and print out score on test data when running script independently
     new_trainer = TrainClassifier()
     new_trainer.load_data()
     new_trainer.create_pipe()

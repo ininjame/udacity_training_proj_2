@@ -70,7 +70,7 @@ A detailed explanation of the folders and files are as follows:
 - *npy files*: graph data generated
 - *process_data.py*: pipeline for processing data and adding it to database. If database does not exist, will create database
 - *train_classifier.py*: the model itself. Includes custom class for identifying messages starting with verbs, a customer multi-output classifier, as well as a TrainClassifier class for generating and saving the model.
- to 
+
 Running the disasterReport.py file in your CLI should get the web app going. Please run the *process_data.py* file to test the creation of the database. Run the *train_classifier.py* file to get a feel for the model.
 
 ## Result

@@ -7,9 +7,10 @@ import numpy as np
 
 def create_base():
     """
-    Create base for plotly visualizations
-    Visualize number of messages in each class.
-    Also visualizes the words with the highest number of 
+    Create base for plotly visualizations:
+    Will produce base data for 2 below graphs, as separate .npy array files (separate for x and y)
+    - Visualize number of messages in each class.
+    - Also visualizes the words with the highest number of appearance.
     """
     db_name = "data/DisasterResponse.db"
     db_url = "".join(["sqlite+pysqlite:///", db_name])
@@ -39,9 +40,8 @@ def create_base():
 
 def return_figures():
     """
-    Create base for plotly visualizations
-    Visualize number of messages in each class.
-    Also visualizes the words with the highest number of 
+    Return Plotly graph objects for displaying in the web app,
+    using data generated from create_base()
     """
     # db_name = "data/DisasterResponse.db"
     # db_url = "".join(["sqlite+pysqlite:///", db_name])
@@ -96,4 +96,5 @@ def return_figures():
     return figures
 
 if __name__ == "__main__":
+    #Create base data when running script independently
     create_base()
