@@ -16,7 +16,7 @@ def create_base():
     db_url = "".join(["sqlite+pysqlite:///", db_name])
     engine = create_engine(db_url)
     with engine.connect() as conn:
-        df = pd.read_sql("disres", con=conn)
+        df = pd.read_sql("select * from disres", con=conn)
     
     graph_1_x = df.iloc[:,4:].sum().sort_values(ascending=False).index.tolist()[:10]
     graph_1_y = df.iloc[:,4:].sum().sort_values(ascending=False).values.tolist()[:10]

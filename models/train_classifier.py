@@ -163,7 +163,7 @@ class TrainClassifier(object):
         db_url = "".join(["sqlite+pysqlite:///", db_name])
         engine = create_engine(db_url)
         with engine.connect() as conn:
-            df = pd.read_sql("disres", con=conn)
+            df = pd.read_sql("select * from disres", con=conn)
         self.df = df
         return self.df
 
@@ -210,7 +210,9 @@ class TrainClassifier(object):
         self.pipeline = pipeline
         return self.pipeline
         
-
+    def save_model(self, filename):
+        with open(filename,"wb") as file:
+            pickle.dump(self, file)
     
 if __name__ == "__main__":
     #Create pipeline and print out score on test data when running script independently

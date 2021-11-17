@@ -32,7 +32,7 @@ db_name = "data/DisasterResponse.db"
 db_url = "".join(["sqlite+pysqlite:///", db_name])
 engine = create_engine(db_url)
 with engine.connect() as conn:
-    df = pd.read_sql("disres", con=conn)
+    df = pd.read_sql("select * from disres", con=conn)
 
 @app.route("/")
 @app.route("/index")
