@@ -55,13 +55,13 @@ def main():
     # Accepts 3 inputs from the user via command lines for data sources and target DB
     # Use default values if inputs are not available
     if len(sys.argv) >1:
-        data_source1 = "\\".join(["..\data",sys.argv[1]])
-        data_source2 = "\\".join(["..\data", sys.argv[2]])
-        db_name = "\\".join(["..\data", sys.argv[3]])
+        data_source1 = "\\".join([".\data",sys.argv[1]])
+        data_source2 = "\\".join([".\data", sys.argv[2]])
+        db_name = "\\".join([".\data", sys.argv[3]])
     else:
-        data_source1 = "..\data\messages.csv"
-        data_source2 = "..\data\categories.csv"
-        db_name = "..\data\DisasterResponse.db"
+        data_source1 = ".\data\messages.csv"
+        data_source2 = ".\data\categories.csv"
+        db_name = ".\data\DisasterResponse.db"
 
     #Ingest data and create dataframes
     print("Loading and combining data...")

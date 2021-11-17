@@ -10,10 +10,14 @@ import pickle
 import pandas as pd
 import models.train_classifier as train_classifier
 from models.train_classifier import TrainClassifier, StartingVerbExtractor, NewMultiOutput
+import models.process_data as process_data
 import sys
 import os
 
 sys.modules["train_classifier"] = train_classifier
+
+if "DisasterResponse.db" not in os.listdir(".\data"):
+    process_data.main()
 
 if "graph_1_x.npy" not in os.listdir("./models"):
     create_base()
